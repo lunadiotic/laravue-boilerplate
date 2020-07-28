@@ -1,4 +1,5 @@
 import router from "./router";
+import store from "./vuex";
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -30,5 +31,6 @@ Vue.component("app", require("./components/App.vue").default);
 
 const app = new Vue({
     el: "#app",
-    router: router
+    router: router,
+    store: store
 });
