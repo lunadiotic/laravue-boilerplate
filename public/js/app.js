@@ -2000,13 +2000,44 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       name: null,
       email: null,
-      password: null
+      password: null,
+      errors: []
     };
   },
   methods: _objectSpread(_objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])({
@@ -2018,7 +2049,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           name: this.name,
           email: this.email,
           password: this.password
-        }
+        },
+        context: this
       });
     }
   })
@@ -37802,6 +37834,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.name },
                       attrs: {
                         id: "name",
                         type: "text",
@@ -37818,7 +37851,18 @@ var render = function() {
                           _vm.name = $event.target.value
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.name
+                      ? _c(
+                          "span",
+                          {
+                            staticClass: "invalid-feedback",
+                            attrs: { role: "alert" }
+                          },
+                          [_c("strong", [_vm._v(_vm._s(_vm.errors.name[0]))])]
+                        )
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),
@@ -37843,6 +37887,7 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: { "is-invalid": _vm.errors.email },
                       attrs: {
                         id: "email",
                         type: "email",
@@ -37858,7 +37903,18 @@ var render = function() {
                           _vm.email = $event.target.value
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.email
+                      ? _c(
+                          "span",
+                          {
+                            staticClass: "invalid-feedback",
+                            attrs: { role: "alert" }
+                          },
+                          [_c("strong", [_vm._v(_vm._s(_vm.errors.email[0]))])]
+                        )
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),
@@ -37883,6 +37939,9 @@ var render = function() {
                         }
                       ],
                       staticClass: "form-control",
+                      class: {
+                        "is-invalid": _vm.errors.password
+                      },
                       attrs: {
                         id: "password",
                         type: "password",
@@ -37898,7 +37957,22 @@ var render = function() {
                           _vm.password = $event.target.value
                         }
                       }
-                    })
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.password
+                      ? _c(
+                          "span",
+                          {
+                            staticClass: "invalid-feedback",
+                            attrs: { role: "alert" }
+                          },
+                          [
+                            _c("strong", [
+                              _vm._v(_vm._s(_vm.errors.password[0]))
+                            ])
+                          ]
+                        )
+                      : _vm._e()
                   ])
                 ]),
                 _vm._v(" "),
@@ -54846,11 +54920,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
 var register = function register(_ref, _ref2) {
   var dispatch = _ref.dispatch;
-  var payload = _ref2.payload;
+  var payload = _ref2.payload,
+      context = _ref2.context;
   return axios.post("/api/auth/register", payload).then(function (result) {
     console.log(result);
   })["catch"](function (err) {
-    console.log(err);
+    // console.log(err.response.data.errors);
+    context.errors = err.response.data.errors;
   });
 };
 
