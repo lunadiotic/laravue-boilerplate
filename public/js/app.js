@@ -57864,36 +57864,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-localforage__WEBPACK_IMPORTED_MODULE_2___default.a.config({
-  driver: localforage__WEBPACK_IMPORTED_MODULE_2___default.a.LOCALSTORAGE,
-  storeName: "idstack"
-});
-/**
- * First we will load all of this project's JavaScript dependencies which
- * includes Vue and other libraries. It is a great starting point when
- * building robust, powerful web applications using Vue and Laravel.
- */
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
-/**
- * The following block of code may be used to automatically register your
- * Vue components. It will recursively scan this directory for the Vue
- * components and automatically register them with their "basename".
- *
- * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
- */
-// const files = require.context('./', true, /\.vue$/i)
-// files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
-
+localforage__WEBPACK_IMPORTED_MODULE_2___default.a.config({
+  driver: localforage__WEBPACK_IMPORTED_MODULE_2___default.a.LOCALSTORAGE,
+  storeName: "idstack"
+});
 Vue.component("app", __webpack_require__(/*! ./components/App.vue */ "./resources/js/components/App.vue")["default"]);
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
-
 _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/setToken").then(function () {
   _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/fetchUser")["catch"](function () {
     _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/removeToken");
@@ -58127,10 +58106,9 @@ var register = function register(_ref, _ref2) {
       context = _ref2.context;
   return axios.post("/api/auth/register", payload).then(function (result) {
     dispatch("setToken", result.data.meta.token).then(function (res) {
-      dispatch("fetchUser", result.data.data); // console.log(result.data.data);
-    })["catch"](function (err) {});
+      dispatch("fetchUser", result.data.data);
+    });
   })["catch"](function (err) {
-    // console.log(err.response.data.errors);
     context.errors = err.response.data.errors;
   });
 };
@@ -58139,19 +58117,15 @@ var login = function login(_ref3, _ref4) {
   var payload = _ref4.payload,
       context = _ref4.context;
   return axios.post("/api/auth/login", payload).then(function (result) {
-    // console.log(result.data.data);
     dispatch("setToken", result.data.meta.token).then(function (res) {
-      dispatch("fetchUser", result.data.data); // console.log(result.data.data);
-    })["catch"](function (err) {});
+      dispatch("fetchUser", result.data.data);
+    });
   })["catch"](function (err) {
-    // console.log(err.response.data.errors);
-    // console.log(err);
     context.errors = err.response.data.errors;
   });
 };
 var fetchUser = function fetchUser(_ref5, user) {
   var commit = _ref5.commit;
-  // console.log(user);
   return axios.get("/api/user/me").then(function (result) {
     commit("setAuthenticated", true);
     commit("setUserData", result.data.data);
