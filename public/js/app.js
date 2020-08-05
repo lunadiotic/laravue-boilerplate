@@ -58110,7 +58110,9 @@ var register = function register(_ref, _ref2) {
   var payload = _ref2.payload,
       context = _ref2.context;
   return axios.post("/api/auth/register", payload).then(function (result) {
-    console.log(result);
+    dispatch("setToken", result.data.meta.token).then(function (res) {
+      dispatch("fetchUser", result.data.data); // console.log(result.data.data);
+    })["catch"](function (err) {});
   })["catch"](function (err) {
     // console.log(err.response.data.errors);
     context.errors = err.response.data.errors;
@@ -58134,8 +58136,10 @@ var login = function login(_ref3, _ref4) {
 var fetchUser = function fetchUser(_ref5, user) {
   var commit = _ref5.commit;
   // console.log(user);
-  commit("setAuthenticated", true);
-  commit("setUserData", user);
+  return axios.get("/api/user/me").then(function (result) {
+    commit("setAuthenticated", true);
+    commit("setUserData", result.data.data);
+  });
 };
 var setToken = function setToken(_ref6, token) {
   var commit = _ref6.commit;
