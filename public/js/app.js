@@ -57894,6 +57894,14 @@ Vue.component("app", __webpack_require__(/*! ./components/App.vue */ "./resource
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+_vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/setToken").then(function () {
+  _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/fetchUser")["catch"](function () {
+    _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/removeToken");
+    _router__WEBPACK_IMPORTED_MODULE_0__["default"].replace({
+      name: "login"
+    });
+  });
+});
 var app = new Vue({
   el: "#app",
   router: _router__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -58094,7 +58102,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************!*\
   !*** ./resources/js/app/auth/vuex/actions.js ***!
   \***********************************************/
-/*! exports provided: register, login, fetchUser, setToken */
+/*! exports provided: register, login, fetchUser, setToken, removeToken, checkTokenExists */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58103,7 +58111,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
-/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../helpers */ "./resources/js/helpers/index.js");
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeToken", function() { return removeToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkTokenExists", function() { return checkTokenExists; });
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! localforage */ "./node_modules/localforage/dist/localforage.js");
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(localforage__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../helpers */ "./resources/js/helpers/index.js");
+
+
 
 var register = function register(_ref, _ref2) {
   var dispatch = _ref.dispatch;
@@ -58142,9 +58158,33 @@ var fetchUser = function fetchUser(_ref5, user) {
   });
 };
 var setToken = function setToken(_ref6, token) {
-  var commit = _ref6.commit;
+  var commit = _ref6.commit,
+      dispatch = _ref6.dispatch;
+
+  if (Object(lodash__WEBPACK_IMPORTED_MODULE_0__["isEmpty"])(token)) {
+    return dispatch("checkTokenExists").then(function (token) {
+      Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["setHttpToken"])(token);
+    });
+  }
+
   commit("setToken", token);
-  Object(_helpers__WEBPACK_IMPORTED_MODULE_0__["setHttpToken"])(token);
+  Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["setHttpToken"])(token);
+};
+var removeToken = function removeToken(_ref7) {
+  var commit = _ref7.commit;
+  commit("setAuthenticated", false);
+  commit("setUserData", null);
+  commit("setToken", null);
+  Object(_helpers__WEBPACK_IMPORTED_MODULE_2__["setHttpToken"])(null);
+};
+var checkTokenExists = function checkTokenExists() {
+  return localforage__WEBPACK_IMPORTED_MODULE_1___default.a.getItem("accesstoken").then(function (token) {
+    if (Object(lodash__WEBPACK_IMPORTED_MODULE_0__["isEmpty"])(token)) {
+      return Promise.reject("NO_STORAGE_FOUND");
+    }
+
+    return Promise.resolve(token);
+  });
 };
 
 /***/ }),
@@ -58604,8 +58644,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _app_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../app/index */ "./resources/js/app/index.js");
 
 
+ // console.log(routes);
 
-console.log(_app_index__WEBPACK_IMPORTED_MODULE_2__["routes"]);
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: "history",

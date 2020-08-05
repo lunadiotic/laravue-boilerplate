@@ -1,3 +1,5 @@
+import { isEmpty } from "lodash";
+import localforage from "localforage";
 import { setHttpToken } from "../../../helpers";
 
 export const register = ({ dispatch }, { payload, context }) => {
@@ -44,7 +46,29 @@ export const fetchUser = ({ commit }, user) => {
     });
 };
 
-export const setToken = ({ commit }, token) => {
+export const setToken = ({ commit, dispatch }, token) => {
+    if (isEmpty(token)) {
+        return dispatch("checkTokenExists").then(token => {
+            setHttpToken(token);
+        });
+    }
+
     commit("setToken", token);
     setHttpToken(token);
+};
+
+export const removeToken = ({ commit }) => {
+    commit("setAuthenticated", false);
+    commit("setUserData", null);
+    commit("setToken", null);
+    setHttpToken(null);
+};
+
+export const checkTokenExists = () => {
+    return localforage.getItem("accesstoken").then(token => {
+        if (isEmpty(token)) {
+            return Promise.reject("NO_STORAGE_FOUND");
+        }
+        return Promise.resolve(token);
+    });
 };

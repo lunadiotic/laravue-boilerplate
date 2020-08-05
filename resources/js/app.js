@@ -36,6 +36,13 @@ Vue.component("app", require("./components/App.vue").default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+store.dispatch("auth/setToken").then(() => {
+    store.dispatch("auth/fetchUser").catch(() => {
+        store.dispatch("auth/removeToken");
+        router.replace({ name: "login" });
+    });
+});
+
 const app = new Vue({
     el: "#app",
     router: router,
