@@ -1992,6 +1992,36 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2005,12 +2035,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     login: "auth/login"
   })), {}, {
     submit: function submit() {
+      var _this = this;
+
       this.login({
         payload: {
           email: this.email,
           password: this.password
         },
         context: this
+      }).then(function (result) {
+        _this.$router.replace({
+          name: "home"
+        });
       });
     }
   })
@@ -2163,6 +2199,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     register: "auth/register"
   })), {}, {
     submit: function submit() {
+      var _this = this;
+
       this.register({
         payload: {
           name: this.name,
@@ -2170,6 +2208,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           password: this.password
         },
         context: this
+      }).then(function (result) {
+        _this.$router.replace({
+          name: "home"
+        });
       });
     }
   })
@@ -40705,7 +40747,11 @@ var render = function() {
           _c("div", { staticClass: "card-body" }, [
             _vm.errors.root
               ? _c("div", { staticClass: "alert alert-danger" }, [
-                  _vm._v(_vm._s(_vm.errors.root))
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.errors.root) +
+                      "\n                    "
+                  )
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -40824,9 +40870,9 @@ var render = function() {
                           [
                             _c("strong", [
                               _vm._v(
-                                "\n                    " +
+                                "\n                                        " +
                                   _vm._s(_vm.errors.password[0]) +
-                                  "\n                  "
+                                  "\n                                    "
                               )
                             ])
                           ]
@@ -40877,7 +40923,11 @@ var staticRenderFns = [
         _c(
           "button",
           { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [_vm._v("Login")]
+          [
+            _vm._v(
+              "\n                                    Login\n                                "
+            )
+          ]
         )
       ])
     ])
@@ -58044,13 +58094,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!***********************************************!*\
   !*** ./resources/js/app/auth/vuex/actions.js ***!
   \***********************************************/
-/*! exports provided: register, login, setToken */
+/*! exports provided: register, login, fetchUser, setToken */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUser", function() { return fetchUser; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
 /* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../helpers */ "./resources/js/helpers/index.js");
 
@@ -58070,19 +58121,24 @@ var login = function login(_ref3, _ref4) {
   var payload = _ref4.payload,
       context = _ref4.context;
   return axios.post("/api/auth/login", payload).then(function (result) {
-    console.log(result.data);
-    dispatch("setToken", result.data.meta.token).then(function (result) {
-      console.log("fetch user");
+    // console.log(result.data.data);
+    dispatch("setToken", result.data.meta.token).then(function (res) {
+      dispatch("fetchUser", result.data.data); // console.log(result.data.data);
     })["catch"](function (err) {});
   })["catch"](function (err) {
     // console.log(err.response.data.errors);
-    console.log(err);
+    // console.log(err);
     context.errors = err.response.data.errors;
   });
 };
-var setToken = function setToken(_ref5, token) {
-  var commit = _ref5.commit,
-      dispatch = _ref5.dispatch;
+var fetchUser = function fetchUser(_ref5, user) {
+  var commit = _ref5.commit;
+  // console.log(user);
+  commit("setAuthenticated", true);
+  commit("setUserData", user);
+};
+var setToken = function setToken(_ref6, token) {
+  var commit = _ref6.commit;
   commit("setToken", token);
   Object(_helpers__WEBPACK_IMPORTED_MODULE_0__["setHttpToken"])(token);
 };
@@ -58136,12 +58192,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/app/auth/vuex/mutations.js ***!
   \*************************************************/
-/*! exports provided: setToken */
+/*! exports provided: setToken, setAuthenticated, setUserData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setToken", function() { return setToken; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setAuthenticated", function() { return setAuthenticated; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "setUserData", function() { return setUserData; });
 /* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! localforage */ "./node_modules/localforage/dist/localforage.js");
 /* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(localforage__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
@@ -58155,6 +58213,12 @@ var setToken = function setToken(state, token) {
   }
 
   localforage__WEBPACK_IMPORTED_MODULE_0___default.a.setItem("accesstoken", token);
+};
+var setAuthenticated = function setAuthenticated(state, trueOrFalse) {
+  state.user.authenticated = trueOrFalse;
+};
+var setUserData = function setUserData(state, data) {
+  state.user.data = data;
 };
 
 /***/ }),

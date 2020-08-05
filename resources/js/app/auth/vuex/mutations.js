@@ -8,3 +8,11 @@ export const setToken = (state, token) => {
     }
     localforage.setItem("accesstoken", token);
 };
+
+export const setAuthenticated = (state, trueOrFalse) => {
+    state.user.authenticated = trueOrFalse;
+};
+
+export const setUserData = (state, data) => {
+    state.user.data = data;
+};
