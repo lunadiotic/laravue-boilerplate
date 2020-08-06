@@ -57880,6 +57880,8 @@ _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/setToken").then(fun
       name: "login"
     });
   });
+})["catch"](function () {
+  _vuex__WEBPACK_IMPORTED_MODULE_1__["default"].dispatch("auth/removeToken");
 });
 var app = new Vue({
   el: "#app",
