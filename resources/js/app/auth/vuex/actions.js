@@ -28,6 +28,12 @@ export const login = ({ dispatch }, { payload, context }) => {
         });
 };
 
+export const logout = ({ dispatch }) => {
+    return axios.post("/api/auth/logout").then(result => {
+        dispatch("removeToken");
+    });
+};
+
 export const fetchUser = ({ commit }, user) => {
     return axios.get("/api/user/me").then(result => {
         commit("setAuthenticated", true);
