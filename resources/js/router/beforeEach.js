@@ -1,4 +1,5 @@
 import store from "../vuex";
+import localforage from "localforage";
 
 const beforeEach = (to, from, next) => {
     store
@@ -12,6 +13,7 @@ const beforeEach = (to, from, next) => {
         })
         .catch(() => {
             if (to.meta.needsAuth) {
+                localforage.setItem("intended", to.name);
                 next({ name: "login" });
                 return;
             }

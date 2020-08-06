@@ -1909,6 +1909,10 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! localforage */ "./node_modules/localforage/dist/localforage.js");
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(localforage__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_2__);
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -1988,40 +1992,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2044,8 +2016,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         },
         context: this
       }).then(function (result) {
-        _this.$router.replace({
-          name: "home"
+        localforage__WEBPACK_IMPORTED_MODULE_1___default.a.getItem("intended").then(function (name) {
+          if (Object(lodash__WEBPACK_IMPORTED_MODULE_2__["isEmpty"])(name)) {
+            _this.$router.replace({
+              name: "home"
+            });
+
+            return;
+          }
+
+          _this.$router.replace({
+            name: name
+          });
         });
       });
     }
@@ -40750,11 +40732,7 @@ var render = function() {
           _c("div", { staticClass: "card-body" }, [
             _vm.errors.root
               ? _c("div", { staticClass: "alert alert-danger" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(_vm.errors.root) +
-                      "\n                    "
-                  )
+                  _vm._v(_vm._s(_vm.errors.root))
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -40872,11 +40850,7 @@ var render = function() {
                           },
                           [
                             _c("strong", [
-                              _vm._v(
-                                "\n                                        " +
-                                  _vm._s(_vm.errors.password[0]) +
-                                  "\n                                    "
-                              )
+                              _vm._v(_vm._s(_vm.errors.password[0]))
                             ])
                           ]
                         )
@@ -40926,11 +40900,7 @@ var staticRenderFns = [
         _c(
           "button",
           { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-          [
-            _vm._v(
-              "\n                                    Login\n                                "
-            )
-          ]
+          [_vm._v("Login")]
         )
       ])
     ])
@@ -58759,6 +58729,9 @@ var setHttpToken = function setHttpToken(token) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../vuex */ "./resources/js/vuex/index.js");
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! localforage */ "./node_modules/localforage/dist/localforage.js");
+/* harmony import */ var localforage__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(localforage__WEBPACK_IMPORTED_MODULE_1__);
+
 
 
 var beforeEach = function beforeEach(to, from, next) {
@@ -58773,6 +58746,7 @@ var beforeEach = function beforeEach(to, from, next) {
     next();
   })["catch"](function () {
     if (to.meta.needsAuth) {
+      localforage__WEBPACK_IMPORTED_MODULE_1___default.a.setItem("intended", to.name);
       next({
         name: "login"
       });
